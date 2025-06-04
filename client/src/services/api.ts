@@ -138,3 +138,44 @@ export async function fetchUsers(): Promise<User[]> {
   if (!res.ok) throw new Error('Nem sikerült lekérni a felhasználókat');
   return res.json();
 }
+
+export async function createUser(
+  user: { username: string; password: string; role: string },
+  currentRole: string
+): Promise<number> {
+  const res = await fetch(`${API_URL}/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Role': currentRole
+    },
+    body: JSON.stringify(user)
+  });
+  if (!res.ok) throw new Error('Nem sikerült létrehozni a felhasználót');
+  const data = await res.json();
+  return data.id;
+}
+
+export async function updateUserRole(
+  id: number,
+  role: string,
+  currentRole: string
+): Promise<void> {
+  const res = await fetch(`${API_URL}/users/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Role': currentRole
+    },
+    body: JSON.stringify({ role })
+  });
+  if (!res.ok) throw new Error('Nem sikerült frissíteni a felhasználót');
+}
+
+export async function deleteUser(id: number, currentRole: string): Promise<void> {
+  const res = await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+    headers: { 'X-Role': currentRole }
+  });
+  if (!res.ok) throw new Error('Nem sikerült törölni a felhasználót');
+}

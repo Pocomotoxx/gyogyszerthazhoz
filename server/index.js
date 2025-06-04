@@ -83,6 +83,44 @@ app.get('/api/users', (req, res) => {
   });
 });
 
+function requireSuperadmin(req, res, next) {
+  if (req.headers['x-role'] !== 'superadmin') {
+    return res.status(403).json({ error: 'Nincs jogosultság' });
+  }
+  next();
+}
+
+app.post('/api/users', requireSuperadmin, (req, res) => {
+  const { username, password, role } = req.body;
+  if (!username || !password || !role) {
+    return res.status(400).json({ error: 'Hiányzó adat' });
+  }
+  db.run(
+    'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+    [username, password, role],
+    function (err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: this.lastID });
+    }
+  );
+});
+
+app.put('/api/users/:id', requireSuperadmin, (req, res) => {
+  const { role } = req.body;
+  if (!role) return res.status(400).json({ error: 'Hiányzó szerepkör' });
+  db.run('UPDATE users SET role = ? WHERE id = ?', [role, req.params.id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ updated: this.changes });
+  });
+});
+
+app.delete('/api/users/:id', requireSuperadmin, (req, res) => {
+  db.run('DELETE FROM users WHERE id = ?', [req.params.id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ deleted: this.changes });
+  });
+});
+
 app.get('/api/therapy_logs', (req, res) => {
   db.all('SELECT * FROM therapy_logs ORDER BY created_at DESC', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
