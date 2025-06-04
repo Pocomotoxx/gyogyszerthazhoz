@@ -6,6 +6,7 @@ import NotificationCenter from './NotificationCenter';
 import MedicationRequests from './MedicationRequests';
 import Payments from './Payments';
 import RoutePlanner from './RoutePlanner';
+import AdminDashboard from './AdminDashboard';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 
 function RequireAuth({ children }: { children: ReactElement }) {
@@ -21,6 +22,7 @@ function AppRoutes() {
       <Route path="/medication-requests" element={<RequireAuth><MedicationRequests /></RequireAuth>} />
       <Route path="/payments" element={<RequireAuth><Payments /></RequireAuth>} />
       <Route path="/route-planner" element={<RequireAuth><RoutePlanner /></RequireAuth>} />
+      <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
     </Routes>
   );
 }

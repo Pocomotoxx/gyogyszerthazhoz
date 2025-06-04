@@ -13,6 +13,8 @@ function roleLabel(role: string) {
       return 'gyógyszerész';
     case 'admin':
       return 'adminisztrátor';
+    case 'superadmin':
+      return 'szuperadmin';
     default:
       return role;
   }
@@ -55,6 +57,9 @@ export default function Dashboard() {
         <Link to="/payments">Fizetések</Link>
         {user.role === 'pharmacist' && (
           <> | <Link to="/route-planner">Útvonaltervező</Link></>
+        )}
+        {(user.role === 'admin' || user.role === 'superadmin') && (
+          <> | <Link to="/admin">Admin</Link></>
         )} |{' '}
         <button onClick={logout}>Kijelentkezés</button>
       </nav>

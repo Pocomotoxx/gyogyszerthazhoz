@@ -132,3 +132,9 @@ export async function planRoute(start: string, end: string): Promise<{ distance:
   if (!res.ok) throw new Error('Nem sikerült útvonalat tervezni');
   return res.json();
 }
+
+export async function fetchUsers(): Promise<User[]> {
+  const res = await fetch(`${API_URL}/users`);
+  if (!res.ok) throw new Error('Nem sikerült lekérni a felhasználókat');
+  return res.json();
+}

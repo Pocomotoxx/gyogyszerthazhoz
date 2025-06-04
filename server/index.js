@@ -60,6 +60,7 @@ db.serialize(() => {
       stmt.run('caregiver', 'test', 'caregiver');
       stmt.run('pharmacist', 'test', 'pharmacist');
       stmt.run('admin', 'test', 'admin');
+      stmt.run('superadmin', 'test', 'superadmin');
       stmt.finalize();
     }
   });
@@ -72,6 +73,13 @@ app.post('/api/login', (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     if (!row) return res.status(401).json({ error: 'Érvénytelen felhasználónév vagy jelszó' });
     res.json({ id: row.id, username: row.username, role: row.role });
+  });
+});
+
+app.get('/api/users', (req, res) => {
+  db.all('SELECT id, username, role FROM users ORDER BY id', [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
   });
 });
 

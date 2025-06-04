@@ -30,7 +30,7 @@ A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node s
 
 ## Alap funkciók
 
-- Szerepkör alapú bejelentkezés (gondozó, gyógyszerész, admin). A felhasználó adatainak mintái a szerver indulásakor automatikusan létrejönnek.
+- Szerepkör alapú bejelentkezés (gondozó, gyógyszerész, admin, superadmin). A felhasználó adatainak mintái a szerver indulásakor automatikusan létrejönnek, köztük egy super admin felhasználó is.
 - Terápiás napló bejegyzések listázása és hozzáadása.
 - Értesítési központ egyéni értesítések megtekintéséhez és olvasottnak jelöléséhez.
 - Gyógyszerigénylések beküldése a gondozói felületről és státuszkezelés a gyógyszerész oldalán.
