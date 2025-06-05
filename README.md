@@ -1,56 +1,37 @@
 # Gyógyszerész a háznál – Telemedicina App
 
-Ez a repository egy egyszerű telemedicina alkalmazás prototípusa. A projekt két részből áll:
+Ez a repository egy egyszerű telemedicina alkalmazás prototípusa, amely PHP alapon valósítja meg mind a backend API-t, mind az egyszerű felhasználói felületet.
 
- - **server** – PHP alapú backend SQLite adatbázissal
-- **client** – React + TypeScript frontend (Vite)
+- **server** – PHP backend SQLite adatbázissal
+- **public** – PHP oldalakat tartalmazó frontend
 
-Az alkalmazás felhasználói felülete teljes egészében magyar nyelvű.
+Az alkalmazás felülete teljes egészében magyar nyelvű.
 
-## Fejlesztői környezet
+## Futás fejlesztői környezetben
 
-1. Telepítsd a frontend függőségeit:
-
-```bash
-cd client && npm install
-```
-
-2. Indítsd el a backendet és a frontendet külön terminálban:
+1. Telepítsd a PHP-t (>=8.0) és győződj meg róla, hogy az `sqlite3` kiterjesztés engedélyezve van.
+2. Indítsd el a beépített webszervert a repository gyökeréből:
 
 ```bash
-# backend
-php -S localhost:3001 -t server
-
-# frontend
-cd client && npm run dev
+php -S localhost:8000 router.php
 ```
 
-A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a PHP szerver felé.
+A `router.php` gondoskodik róla, hogy a `/api` útvonalak a backendhez kerüljenek, minden más pedig a `public/` könyvtárból legyen kiszolgálva.
 
 ## Alap funkciók
 
-- Szerepkör alapú bejelentkezés (gondozó, gyógyszerész, admin, superadmin). A felhasználó adatainak mintái a szerver indulásakor automatikusan létrejönnek, köztük egy super admin felhasználó is.
+- Szerepkör alapú bejelentkezés (gondozó, gyógyszerész, admin, superadmin). A minta felhasználók a szerver indulásakor automatikusan létrejönnek.
 - A szuperadmin felületen új adminok hozhatók létre, módosítható a felhasználók szerepköre és törölhetők a fiókok.
-- Terápiás napló bejegyzések listázása és hozzáadása.
-- Bejegyzésekhez fénykép csatolása és feltöltése.
-- Értesítési központ egyéni értesítések megtekintéséhez és olvasottnak jelöléséhez.
+- Terápiás napló bejegyzések listázása és hozzáadása fényképpel.
+- Értesítési központ az egyéni értesítések megtekintéséhez és olvasottnak jelöléséhez.
 - Gyógyszerigénylések beküldése a gondozói felületről és státuszkezelés a gyógyszerész oldalán.
 - Gyógyszerek online fizetése egyszerű kártyás fizetési űrlappal.
-- Útvonaltervező a gyógyszerészek számára, nyílt térképszolgáltatások felhasználásával.
-- Belső chatfelület a gondozók, a gyógyszerészek és az adminok közötti kommunikációhoz.
-- Chatüzenetekhez kép csatolható.
-- Gyógyszerfelismerő modul, amely a kamera képét az AI-gatewayen keresztül dolgozza fel és megjeleníti a gyógyszer legfontosabb adatait.
+- Útvonaltervező a gyógyszerészek számára nyílt térképszolgáltatással.
+- Belső chatfelület a gondozók, gyógyszerészek és adminok között, üzenetenként opcionális képcsatolással.
+- Gyógyszerfelismerő modul, amely a kamera képét az AI-gatewayen keresztül dolgozza fel és a csomagoláshoz tartozó információkat jeleníti meg.
 
 ### Környezeti változók
 
-A gyógyszerfelismeréshez az `VITE_AI_GATEWAY_URL` változóval állítható be az AI-gateway alap URL-je (frontend oldalon). Alapértelmezésben `/ai` értéket használ.
+A gyógyszerfelismeréshez az `AI_GATEWAY_URL` környezeti változóval állítható be az AI-gateway alap URL-je. Alapértelmezésben `/ai` értéket használ.
 
 Az alkalmazás továbbra is prototípus jellegű, a jogosultságkezelés és a validációk minimálisak.
-
-## Tesztkörnyezet
-
-A frontendhez Vitest tesztek tartoznak. Futtatásuk:
-
-```bash
-cd client && npm test
-```
