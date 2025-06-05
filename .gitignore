@@ -29,3 +29,4 @@ Homestead.json
 .phpactor.json
 auth.json
 server/database.sqlite
+server/uploads/

@@ -2,31 +2,30 @@
 
 Ez a repository egy egyszerű telemedicina alkalmazás prototípusa. A projekt két részből áll:
 
-- **server** – Node.js/Express szerver SQLite adatbázissal
+ - **server** – PHP alapú backend SQLite adatbázissal
 - **client** – React + TypeScript frontend (Vite)
 
 Az alkalmazás felhasználói felülete teljes egészében magyar nyelvű.
 
 ## Fejlesztői környezet
 
-1. Telepítsd a függőségeket mindkét könyvtárban:
+1. Telepítsd a frontend függőségeit:
 
 ```bash
-cd server && npm install
-cd ../client && npm install
+cd client && npm install
 ```
 
 2. Indítsd el a backendet és a frontendet külön terminálban:
 
 ```bash
 # backend
-cd server && npm start
+php -S localhost:3001 -t server
 
 # frontend
 cd client && npm run dev
 ```
 
-A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node szerver felé.
+A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a PHP szerver felé.
 
 ## Alap funkciók
 
@@ -50,5 +49,8 @@ Az alkalmazás továbbra is prototípus jellegű, a jogosultságkezelés és a v
 
 ## Tesztkörnyezet
 
-A backendhez Jest alapú tesztelés készült. A `npm test` parancs in-memory SQLite adatbázissal futtatja a teszteket.
-A frontendhez Vitest + Testing Library került bevezetésre. Tesztek futtatása: `npm test` a `client` könyvtárban.
+A frontendhez Vitest tesztek tartoznak. Futtatásuk:
+
+```bash
+cd client && npm test
+```
