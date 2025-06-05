@@ -8,6 +8,7 @@ import Payments from './Payments';
 import RoutePlanner from './RoutePlanner';
 import AdminDashboard from './AdminDashboard';
 import Chat from './Chat';
+import DrugScanner from './DrugScanner';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 
 function RequireAuth({ children }: { children: ReactElement }) {
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/route-planner" element={<RequireAuth><RoutePlanner /></RequireAuth>} />
       <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
       <Route path="/chat" element={<RequireAuth><Chat /></RequireAuth>} />
+      <Route path="/drug-scan" element={<RequireAuth><DrugScanner /></RequireAuth>} />
     </Routes>
   );
 }

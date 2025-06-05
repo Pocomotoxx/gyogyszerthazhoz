@@ -38,5 +38,10 @@ A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node s
 - Gyógyszerek online fizetése egyszerű kártyás fizetési űrlappal.
 - Útvonaltervező a gyógyszerészek számára, nyílt térképszolgáltatások felhasználásával.
 - Belső chatfelület a gondozók, a gyógyszerészek és az adminok közötti kommunikációhoz.
+- Gyógyszerfelismerő modul, amely a kamera képét az AI-gatewayen keresztül dolgozza fel és megjeleníti a gyógyszer legfontosabb adatait.
+
+### Környezeti változók
+
+A gyógyszerfelismeréshez az `VITE_AI_GATEWAY_URL` változóval állítható be az AI-gateway alap URL-je (frontend oldalon). Alapértelmezésben `/ai` értéket használ.
 
 Az alkalmazás továbbra is prototípus jellegű, a jogosultságkezelés és a validációk minimálisak.
