@@ -8,6 +8,7 @@ export interface TherapyLog {
   id: number;
   user_id: number;
   text: string;
+  photo?: string;
   created_at: string;
 }
 
@@ -45,10 +46,23 @@ export interface Message {
   sender_id: number;
   receiver_id: number;
   text: string;
+  photo?: string;
   created_at: string;
 }
 
 const API_URL = '/api';
+
+export async function uploadImage(file: File): Promise<string> {
+  const form = new FormData();
+  form.append('image', file);
+  const res = await fetch(`${API_URL}/upload`, {
+    method: 'POST',
+    body: form
+  });
+  if (!res.ok) throw new Error('Nem sikerült feltölteni a képet');
+  const data = await res.json();
+  return data.path as string;
+}
 
 export async function login(username: string, password: string): Promise<User> {
   const res = await fetch(`${API_URL}/login`, {
@@ -68,11 +82,15 @@ export async function fetchTherapyLogs(): Promise<TherapyLog[]> {
   return res.json();
 }
 
-export async function addTherapyLog(user_id: number, text: string): Promise<number> {
+export async function addTherapyLog(
+  user_id: number,
+  text: string,
+  photo?: string
+): Promise<number> {
   const res = await fetch(`${API_URL}/therapy_logs`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_id, text })
+    body: JSON.stringify({ user_id, text, photo })
   });
   if (!res.ok) throw new Error('Nem sikerült hozzáadni a bejegyzést');
   const data = await res.json();
@@ -194,11 +212,16 @@ export async function fetchMessages(user1: number, user2: number): Promise<Messa
   return res.json();
 }
 
-export async function sendMessage(sender_id: number, receiver_id: number, text: string): Promise<number> {
+export async function sendMessage(
+  sender_id: number,
+  receiver_id: number,
+  text: string,
+  photo?: string
+): Promise<number> {
   const res = await fetch(`${API_URL}/messages`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sender_id, receiver_id, text })
+    body: JSON.stringify({ sender_id, receiver_id, text, photo })
   });
   if (!res.ok) throw new Error('Nem sikerült elküldeni az üzenetet');
   const data = await res.json();

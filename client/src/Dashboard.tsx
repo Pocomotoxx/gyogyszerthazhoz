@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './hooks/useAuth';
-import { fetchTherapyLogs, addTherapyLog } from './services/api';
+import { fetchTherapyLogs, addTherapyLog, uploadImage } from './services/api';
 import type { TherapyLog } from './services/api';
 
 import { Link } from 'react-router-dom';
@@ -24,6 +24,7 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const [logs, setLogs] = useState<TherapyLog[]>([]);
   const [text, setText] = useState('');
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     refresh();
@@ -41,7 +42,12 @@ export default function Dashboard() {
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
-    await addTherapyLog(user.id, text);
+    let photo;
+    if (file) {
+      photo = await uploadImage(file);
+      setFile(null);
+    }
+    await addTherapyLog(user.id, text, photo);
     setText('');
     refresh();
   }
@@ -67,12 +73,18 @@ export default function Dashboard() {
       </nav>
       <h3>Terápiás napló</h3>
       <form onSubmit={handleAdd} style={{ marginBottom: '1rem' }}>
-        <input value={text} onChange={e => setText(e.target.value)} placeholder="Új bejegyzés" />
+        <input value={text} onChange={e => setText(e.target.value)} placeholder="Új bejegyzés" />{' '}
+        <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />{' '}
         <button type="submit">Hozzáadás</button>
       </form>
       <ul>
         {logs.map(log => (
-          <li key={log.id}>{log.text} - {new Date(log.created_at).toLocaleString()}</li>
+          <li key={log.id}>
+            {log.text} - {new Date(log.created_at).toLocaleString()}
+            {log.photo && (
+              <img src={log.photo} alt="csatolt kep" style={{ maxWidth: '100px', display: 'block' }} />
+            )}
+          </li>
         ))}
       </ul>
     </div>

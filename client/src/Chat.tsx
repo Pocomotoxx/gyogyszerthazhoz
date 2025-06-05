@@ -4,6 +4,7 @@ import {
   fetchUsers,
   fetchMessages,
   sendMessage,
+  uploadImage,
   type User,
   type Message
 } from './services/api';
@@ -14,6 +15,7 @@ export default function Chat() {
   const [peerId, setPeerId] = useState<number | ''>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (user) loadUsers();
@@ -41,8 +43,13 @@ export default function Chat() {
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!user || !peerId || !text) return;
-    await sendMessage(user.id, Number(peerId), text);
+    if (!user || !peerId || (!text && !file)) return;
+    let photo;
+    if (file) {
+      photo = await uploadImage(file);
+      setFile(null);
+    }
+    await sendMessage(user.id, Number(peerId), text, photo);
     setText('');
     loadMessages();
   }
@@ -75,6 +82,9 @@ export default function Chat() {
             {messages.map(m => (
               <li key={m.id}>
                 <b>{nameFor(m.sender_id)}:</b> {m.text}{' '}
+                {m.photo && (
+                  <img src={m.photo} alt="csatolt kep" style={{ maxWidth: '100px', display: 'block' }} />
+                )}
                 <small>{new Date(m.created_at).toLocaleString()}</small>
               </li>
             ))}
@@ -85,6 +95,7 @@ export default function Chat() {
               onChange={e => setText(e.target.value)}
               placeholder="Üzenet"
             />{' '}
+            <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />{' '}
             <button type="submit">Küldés</button>
           </form>
         </>

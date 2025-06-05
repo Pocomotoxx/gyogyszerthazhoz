@@ -21,7 +21,7 @@ describe('Therapy logs API', () => {
 
     await request(app)
       .post('/api/therapy_logs')
-      .send({ user_id: userId, text: 'test log' })
+      .send({ user_id: userId, text: 'test log', photo: null })
       .expect(200);
 
     const logs = await request(app).get('/api/therapy_logs');

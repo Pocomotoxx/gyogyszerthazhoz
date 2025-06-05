@@ -1,10 +1,24 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 const app = express();
 const db = new sqlite3.Database(process.env.DB_FILE || path.join(__dirname, 'database.sqlite'));
 
+fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
+
+// image upload
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'Nincs fájl' });
+  }
+  res.json({ path: `/uploads/${req.file.filename}` });
+});
 
 // initialize tables
 db.serialize(() => {
@@ -18,6 +32,7 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     text TEXT,
+    photo TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   )`);
@@ -57,6 +72,7 @@ db.serialize(() => {
     sender_id INTEGER,
     receiver_id INTEGER,
     text TEXT,
+    photo TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(sender_id) REFERENCES users(id),
     FOREIGN KEY(receiver_id) REFERENCES users(id)
@@ -139,8 +155,8 @@ app.get('/api/therapy_logs', (req, res) => {
 });
 
 app.post('/api/therapy_logs', (req, res) => {
-  const { user_id, text } = req.body;
-  db.run('INSERT INTO therapy_logs (user_id, text) VALUES (?, ?)', [user_id, text], function(err) {
+  const { user_id, text, photo } = req.body;
+  db.run('INSERT INTO therapy_logs (user_id, text, photo) VALUES (?, ?, ?)', [user_id, text, photo || null], function(err) {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ id: this.lastID });
   });
@@ -243,13 +259,13 @@ app.get('/api/messages', (req, res) => {
 });
 
 app.post('/api/messages', (req, res) => {
-  const { sender_id, receiver_id, text } = req.body;
-  if (!sender_id || !receiver_id || !text) {
+  const { sender_id, receiver_id, text, photo } = req.body;
+  if (!sender_id || !receiver_id || (!text && !photo)) {
     return res.status(400).json({ error: 'Hiányzó adat' });
   }
   db.run(
-    'INSERT INTO messages (sender_id, receiver_id, text) VALUES (?, ?, ?)',
-    [sender_id, receiver_id, text],
+    'INSERT INTO messages (sender_id, receiver_id, text, photo) VALUES (?, ?, ?, ?)',
+    [sender_id, receiver_id, text || '', photo || null],
     function (err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ id: this.lastID });

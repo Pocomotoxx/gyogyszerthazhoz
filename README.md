@@ -33,11 +33,13 @@ A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node s
 - Szerepkör alapú bejelentkezés (gondozó, gyógyszerész, admin, superadmin). A felhasználó adatainak mintái a szerver indulásakor automatikusan létrejönnek, köztük egy super admin felhasználó is.
 - A szuperadmin felületen új adminok hozhatók létre, módosítható a felhasználók szerepköre és törölhetők a fiókok.
 - Terápiás napló bejegyzések listázása és hozzáadása.
+- Bejegyzésekhez fénykép csatolása és feltöltése.
 - Értesítési központ egyéni értesítések megtekintéséhez és olvasottnak jelöléséhez.
 - Gyógyszerigénylések beküldése a gondozói felületről és státuszkezelés a gyógyszerész oldalán.
 - Gyógyszerek online fizetése egyszerű kártyás fizetési űrlappal.
 - Útvonaltervező a gyógyszerészek számára, nyílt térképszolgáltatások felhasználásával.
 - Belső chatfelület a gondozók, a gyógyszerészek és az adminok közötti kommunikációhoz.
+- Chatüzenetekhez kép csatolható.
 - Gyógyszerfelismerő modul, amely a kamera képét az AI-gatewayen keresztül dolgozza fel és megjeleníti a gyógyszer legfontosabb adatait.
 
 ### Környezeti változók
