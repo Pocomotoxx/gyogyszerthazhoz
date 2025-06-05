@@ -15,6 +15,12 @@ Az alkalmazás felülete teljes egészében magyar nyelvű.
 ```bash
 php -S localhost:8000 router.php
 ```
+### Futtatás Apache szerveren
+1. Másold a repository tartalmát az Apache DocumentRootjába.
+2. Engedélyezd a mod_rewrite modult (a2enmod rewrite).
+3. A gyökérben lévő `.htaccess` a `/api` kéréseket a `server/index.php`-hez irányítja, a többi fájl a `public/` könyvtárból töltődik be.
+4. Ellenőrizd a PHP telepítését: `php -l router.php`.
+
 
 A `router.php` gondoskodik róla, hogy a `/api` útvonalak a backendhez kerüljenek, minden más pedig a `public/` könyvtárból legyen kiszolgálva.
 
