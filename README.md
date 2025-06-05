@@ -37,5 +37,6 @@ A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node s
 - Gyógyszerigénylések beküldése a gondozói felületről és státuszkezelés a gyógyszerész oldalán.
 - Gyógyszerek online fizetése egyszerű kártyás fizetési űrlappal.
 - Útvonaltervező a gyógyszerészek számára, nyílt térképszolgáltatások felhasználásával.
+- Belső chatfelület a gondozók, a gyógyszerészek és az adminok közötti kommunikációhoz.
 
 Az alkalmazás továbbra is prototípus jellegű, a jogosultságkezelés és a validációk minimálisak.

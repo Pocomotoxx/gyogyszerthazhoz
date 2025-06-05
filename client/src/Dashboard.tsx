@@ -54,7 +54,8 @@ export default function Dashboard() {
       <nav>
         <Link to="/notifications">Értesítések</Link> |{' '}
         <Link to="/medication-requests">Gyógyszerigénylések</Link> |{' '}
-        <Link to="/payments">Fizetések</Link>
+        <Link to="/payments">Fizetések</Link> |{' '}
+        <Link to="/chat">Chat</Link>
         {user.role === 'pharmacist' && (
           <> | <Link to="/route-planner">Útvonaltervező</Link></>
         )}

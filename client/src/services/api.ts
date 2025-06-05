@@ -40,6 +40,14 @@ export interface Payment {
   created_at: string;
 }
 
+export interface Message {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  text: string;
+  created_at: string;
+}
+
 const API_URL = '/api';
 
 export async function login(username: string, password: string): Promise<User> {
@@ -178,4 +186,21 @@ export async function deleteUser(id: number, currentRole: string): Promise<void>
     headers: { 'X-Role': currentRole }
   });
   if (!res.ok) throw new Error('Nem sikerült törölni a felhasználót');
+}
+
+export async function fetchMessages(user1: number, user2: number): Promise<Message[]> {
+  const res = await fetch(`${API_URL}/messages?user1=${user1}&user2=${user2}`);
+  if (!res.ok) throw new Error('Nem sikerült lekérni az üzeneteket');
+  return res.json();
+}
+
+export async function sendMessage(sender_id: number, receiver_id: number, text: string): Promise<number> {
+  const res = await fetch(`${API_URL}/messages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sender_id, receiver_id, text })
+  });
+  if (!res.ok) throw new Error('Nem sikerült elküldeni az üzenetet');
+  const data = await res.json();
+  return data.id;
 }

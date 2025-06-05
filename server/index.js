@@ -52,6 +52,16 @@ db.serialize(() => {
     FOREIGN KEY(request_id) REFERENCES medication_requests(id)
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER,
+    receiver_id INTEGER,
+    text TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(sender_id) REFERENCES users(id),
+    FOREIGN KEY(receiver_id) REFERENCES users(id)
+  )`);
+
   // seed sample users if table empty
   db.get('SELECT COUNT(*) AS cnt FROM users', (err, row) => {
     if (err) return;
@@ -211,6 +221,37 @@ app.post('/api/payments', (req, res) => {
     function(err) {
       if (err) return res.status(500).json({ error: err.message });
       db.run('UPDATE medication_requests SET status = "Paid" WHERE id = ?', [request_id]);
+      res.json({ id: this.lastID });
+    }
+  );
+});
+
+// messages
+app.get('/api/messages', (req, res) => {
+  const { user1, user2 } = req.query;
+  if (!user1 || !user2) {
+    return res.status(400).json({ error: 'Hiányzó felhasználó azonosító' });
+  }
+  db.all(
+    `SELECT * FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY created_at ASC`,
+    [user1, user2, user2, user1],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+app.post('/api/messages', (req, res) => {
+  const { sender_id, receiver_id, text } = req.body;
+  if (!sender_id || !receiver_id || !text) {
+    return res.status(400).json({ error: 'Hiányzó adat' });
+  }
+  db.run(
+    'INSERT INTO messages (sender_id, receiver_id, text) VALUES (?, ?, ?)',
+    [sender_id, receiver_id, text],
+    function (err) {
+      if (err) return res.status(500).json({ error: err.message });
       res.json({ id: this.lastID });
     }
   );
