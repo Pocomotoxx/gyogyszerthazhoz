@@ -2,7 +2,7 @@ const express = require('express');
 const sqlite3 = require('sqlite3');
 const path = require('path');
 const app = express();
-const db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'));
+const db = new sqlite3.Database(process.env.DB_FILE || path.join(__dirname, 'database.sqlite'));
 
 app.use(express.json());
 
@@ -290,6 +290,10 @@ app.get('/api/route', async (req, res) => {
 });
 
 const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+}
+
+module.exports = app;

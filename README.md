@@ -45,3 +45,8 @@ A Vite fejlesztői szerver automatikusan proxyzza a `/api` végpontokat a Node s
 A gyógyszerfelismeréshez az `VITE_AI_GATEWAY_URL` változóval állítható be az AI-gateway alap URL-je (frontend oldalon). Alapértelmezésben `/ai` értéket használ.
 
 Az alkalmazás továbbra is prototípus jellegű, a jogosultságkezelés és a validációk minimálisak.
+
+## Tesztkörnyezet
+
+A backendhez Jest alapú tesztelés készült. A `npm test` parancs in-memory SQLite adatbázissal futtatja a teszteket.
+A frontendhez Vitest + Testing Library került bevezetésre. Tesztek futtatása: `npm test` a `client` könyvtárban.
